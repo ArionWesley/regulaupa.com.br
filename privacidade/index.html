@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regula UPA · Política de privacidade</title>
+<style>
+  :root { --tx:#102a43; --tx2:#52606d; --azul:#0b55c2; --borda:#e4e7eb; }
+  body { margin:0; background:#f8fafc; color:var(--tx); font:16px/1.6 -apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:40px 20px 60px; }
+  h1 { font-size:28px; margin:0 0 4px; } .data { color:var(--tx2); font-size:14px; margin-bottom:28px; }
+  h2 { font-size:19px; margin:30px 0 8px; color:var(--azul); }
+  ul { padding-left:22px; } li { margin:4px 0; } a { color:var(--azul); }
+  .cartao { background:#fff; border:1px solid var(--borda); border-radius:10px; padding:16px 18px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Regula UPA — Política de privacidade</h1>
+  <div class="data">Atualizada em 17/10/2026</div>
+
+  <div class="cartao">O Regula UPA é uma extensão do Google Chrome para profissionais de saúde das UPAs de Porto Velho (RO). Ela lê o
+  atendimento aberto no e-Saúde, sugere o preenchimento do pedido de regulação no CRUE (REGULA-RO) com apoio de inteligência
+  artificial e junta os anexos num PDF. O profissional revisa e envia o pedido; a extensão nunca envia nada sozinha.</div>
+
+  <h2>1. Dados do profissional (a conta)</h2>
+  <ul>
+    <li>Guardamos o cadastro: nome, CPF (usado como login), número e UF do CRM, telefone e e-mail. Servem para preencher os dados do
+      solicitante no CRUE e para entrar na extensão.</li>
+    <li>A senha é guardada de forma cifrada pelo provedor de autenticação (Supabase); nós não temos acesso a ela.</li>
+    <li>Guardamos também a contagem de uso da análise por IA (data, modelo e quantidade de tokens), para limitar o uso e controlar o
+      custo. Sem nenhum dado de paciente.</li>
+  </ul>
+
+  <h2>2. Dados do paciente</h2>
+  <ul>
+    <li>A extensão lê, no e-Saúde, o atendimento que o profissional abriu: identificação do paciente, evoluções, medicações, exames e
+      documentos. Essa leitura fica no navegador do profissional.</li>
+    <li>Para a análise por IA, o texto das evoluções, a idade, o sexo, as medicações e os exames são enviados ao nosso servidor e dele
+      ao modelo Claude (Anthropic), <b>com o nome, o CPF, o CNS e o nome da mãe do paciente trocados por marcadores</b>. Quando o
+      atendimento tem um documento livre de encaminhamento feito na última hora, vai só o texto desse documento (com os mesmos
+      marcadores), a idade e o sexo, no lugar das evoluções. O resultado volta para a extensão. Nosso servidor não guarda esse
+      conteúdo.</li>
+    <li>Os anexos (documentos e exames) são juntados num PDF dentro do próprio navegador e vão direto para o formulário do CRUE.
+      Eles não são enviados à IA nem guardados no nosso servidor. Enquanto a regulação está aberta, ficam no armazenamento da
+      própria extensão no Chrome (para o profissional poder fechar e reabrir a extensão sem perdê-los) e são apagados quando o
+      CRUE é preenchido, quando a regulação é descartada, quando o Chrome é aberto de novo ou, no máximo, depois de 12 horas.</li>
+    <li><b>Fotos pelo celular</b>: quando o profissional usa o QR code, as fotos e os PDFs enviados pelo celular ficam
+      guardados de forma temporária e privada no servidor só até a extensão buscá-los (em segundos), e são apagados em
+      seguida. O código vale 15 minutos. O servidor guarda apenas as iniciais do paciente, mostradas no celular, e, enquanto o
+      código vale, o nome que o celular dá a cada arquivo (por exemplo, "Foto 1" ou o nome do arquivo), apagado junto com os
+      arquivos.</li>
+    <li><b>Encaminhamento do e-Saúde</b> ("+ gerar doc. livre", só quando o profissional clica): a extensão cria no próprio
+      e-Saúde o Documento Livre "ENCAMINHAMENTO MÉDICO" com o texto das evoluções do atendimento e anexa a versão para
+      impressão dele. Para escolher qual evolução serve de base, o texto das evoluções vai ao nosso servidor e dele ao modelo
+      Claude <b>com a identificação do paciente trocada por marcadores</b>; nada disso é guardado no servidor. O documento
+      baixado fica com os outros anexos, no próprio Chrome.</li>
+    <li><b>Digitalizar</b>: o recorte e a melhora da imagem de um documento são feitos no próprio computador; nada é enviado
+      a servidor.</li>
+    <li><b>Rascunhos</b>: o que o profissional digita nas janelas do e-Saúde pode ser guardado como rascunho na memória do próprio
+      Chrome por até 6 horas, para não se perder. Não sai do computador e some quando o Chrome é fechado.</li>
+  </ul>
+
+  <h2>3. O que não fazemos</h2>
+  <ul>
+    <li>Não vendemos nem compartilhamos dados com terceiros, a não ser os provedores necessários ao funcionamento: Supabase
+      (servidor e contas) e Anthropic (análise por IA).</li>
+    <li>Não usamos os dados para publicidade nem para avaliar crédito.</li>
+    <li>Não alteramos nada no e-Saúde. A única coisa que a extensão cria lá é o documento de encaminhamento, e só quando o
+      profissional clica em "+ gerar doc. livre". Não enviamos o pedido no CRUE: o profissional revisa e envia.</li>
+  </ul>
+
+  <h2>4. Onde ficam os dados</h2>
+  <ul>
+    <li>Servidor: Supabase, região de São Paulo (Brasil). Comunicação sempre criptografada (HTTPS).</li>
+    <li>No computador: a sessão da conta, o andamento da regulação e os anexos da regulação aberta ficam no armazenamento da
+      extensão no Chrome. O texto do encaminhamento que o profissional salva no e-Saúde fica só na memória do Chrome, por no
+      máximo 1 hora (ou até o Chrome fechar), para ser usado na regulação desse atendimento.</li>
+  </ul>
+
+  <h2>5. Seus direitos (LGPD)</h2>
+  <ul>
+    <li>Você pode ver e corrigir o seu cadastro na própria extensão (lápis ao lado do seu nome).</li>
+    <li>Para excluir a conta e todos os dados dela, use "Excluir minha conta" na edição do cadastro ou escreva para o contato abaixo.</li>
+  </ul>
+
+  <h2>6. Contato</h2>
+  <p>Arion Wesley Costa Santos — <a href="mailto:arionwesley@gmail.com">arionwesley@gmail.com</a></p>
+</main>
+</body>
+</html>
