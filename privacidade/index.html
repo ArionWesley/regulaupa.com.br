@@ -17,7 +17,7 @@
 <body>
 <main>
   <h1>Regula UPA — Política de privacidade</h1>
-  <div class="data">Atualizada em 17/10/2026</div>
+  <div class="data">Atualizada em 08/11/2026</div>
 
   <div class="cartao">O Regula UPA é uma extensão do Google Chrome para profissionais de saúde das UPAs de Porto Velho (RO). Ela lê o
   atendimento aberto no e-Saúde, sugere o preenchimento do pedido de regulação no CRUE (REGULA-RO) com apoio de inteligência
@@ -50,11 +50,14 @@
       seguida. O código vale 15 minutos. O servidor guarda apenas as iniciais do paciente, mostradas no celular, e, enquanto o
       código vale, o nome que o celular dá a cada arquivo (por exemplo, "Foto 1" ou o nome do arquivo), apagado junto com os
       arquivos.</li>
-    <li><b>Encaminhamento do e-Saúde</b> ("+ gerar doc. livre", só quando o profissional clica): a extensão cria no próprio
+    <li><b>Encaminhamento do e-Saúde</b> ("+ gerar docs" → doc. livre, só quando o profissional clica e confirma): a extensão cria no próprio
       e-Saúde o Documento Livre "ENCAMINHAMENTO MÉDICO" com o texto das evoluções do atendimento e anexa a versão para
       impressão dele. Para escolher qual evolução serve de base, o texto das evoluções vai ao nosso servidor e dele ao modelo
       Claude <b>com a identificação do paciente trocada por marcadores</b>; nada disso é guardado no servidor. O documento
       baixado fica com os outros anexos, no próprio Chrome.</li>
+    <li><b>Ficha de transferência inter-hospitalar</b> ("+ gerar docs", só quando o profissional pede): a ficha da SESAU é
+      montada e transformada em PDF no próprio computador, com o que a extensão já leu do atendimento e a análise já feita;
+      nada novo é enviado a servidor. Ela fica com os outros anexos, no próprio Chrome, e vai no campo dela no CRUE.</li>
     <li><b>Digitalizar</b>: o recorte e a melhora da imagem de um documento são feitos no próprio computador; nada é enviado
       a servidor.</li>
     <li><b>Rascunhos</b>: o que o profissional digita nas janelas do e-Saúde pode ser guardado como rascunho na memória do próprio
@@ -67,7 +70,7 @@
       (servidor e contas) e Anthropic (análise por IA).</li>
     <li>Não usamos os dados para publicidade nem para avaliar crédito.</li>
     <li>Não alteramos nada no e-Saúde. A única coisa que a extensão cria lá é o documento de encaminhamento, e só quando o
-      profissional clica em "+ gerar doc. livre". Não enviamos o pedido no CRUE: o profissional revisa e envia.</li>
+      profissional pede o doc. livre no "+ gerar docs". Não enviamos o pedido no CRUE: o profissional revisa e envia.</li>
   </ul>
 
   <h2>4. Onde ficam os dados</h2>
