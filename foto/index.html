@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0b55c2">
+<title>Regula UPA · Fotos</title>
+<!--
+  A página do celular das "Fotos pelo celular" da extensão Regula UPA.
+  Fica em https://arionwesley.com.br/foto/ (este arquivo é o index.html dessa pasta).
+  O QR da extensão abre: https://arionwesley.com.br/foto/#<id>.<token>
+  A foto é reduzida aqui (no máximo 2000 px, JPEG; a PNG, como os prints de tela, continua PNG) e vai direto para a função
+  "celular" do Supabase do Regula UPA. O PDF vai como está (até 15 MB; o servidor aceita até 50 MB e 15 arquivos por código).
+  O AVISO ANTES (v1.3): assim que os arquivos são escolhidos, a página avisa o servidor ("anunciar": uma chave e o nome de
+  cada um) — a extensão já mostra o esqueleto com o nome — e só depois reduz e envia, um de cada vez (o próximo já vai
+  sendo reduzido enquanto o anterior sobe). Nome: "Foto N" da câmera; o nome do arquivo da galeria e do PDF.
+  Nada fica neste site: ele só entrega esta página.
+-->
+<style>
+  :root { --tx:#102a43; --tx2:#52606d; --tx3:#829ab1; --borda:#e4e7eb; --azul:#0b55c2; --verde:#047857; --vermelho:#dc2626; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { margin:0; background:#fff; color:var(--tx); font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  main { max-width:420px; margin:0 auto; padding:22px 18px calc(22px + env(safe-area-inset-bottom)); min-height:100vh; display:flex; flex-direction:column; }
+  h1 { text-align:center; font-size:20px; margin:4px 0 2px; }
+  h1 sup { background:var(--vermelho); color:#fff; font-size:9px; padding:1px 4px; border-radius:3px; margin-left:3px; vertical-align:8px; }
+  .sub { text-align:center; font-size:13px; color:var(--tx2); margin-bottom:18px; min-height:17px; }
+  .botao { display:block; width:100%; border-radius:12px; padding:16px; text-align:center; font-size:16px; font-weight:600; margin-bottom:10px; cursor:pointer; user-select:none; }
+  .botao.p { background:var(--azul); color:#fff; } .botao.s { background:#fff; color:var(--azul); border:1.5px solid #bcd3f5; }
+  .botao { display:flex; align-items:center; justify-content:center; gap:10px; }
+  .ic { width:22px; height:22px; flex:none; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  .ok-ic { width:14px; height:14px; vertical-align:-2px; margin-right:3px; fill:none; stroke:currentColor; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round; }
+  .botao.desligado { opacity:.45; pointer-events:none; }
+  input[type=file] { display:none; }
+  ul { list-style:none; margin:8px 0 0; padding:0; }
+  li { display:flex; align-items:center; gap:10px; padding:8px 0; border-top:1px solid var(--borda); font-size:14px; }
+  li img, li .doc { width:34px; height:44px; flex:none; object-fit:cover; border-radius:4px; border:1px solid var(--borda); background:#f0f4f8; }
+  li .doc { display:flex; align-items:center; justify-content:center; background:#fdecec; border-color:#f5c2c2; color:var(--vermelho); }
+  li .doc svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  li .nome { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  li .st { margin-left:auto; font-size:12.5px; color:var(--azul); text-align:right; }
+  li .st.ok { color:var(--verde); } li .st.erro { color:var(--vermelho); }
+  li button { margin-left:6px; border:1px solid #f5c2c2; color:var(--vermelho); background:#fff; border-radius:6px; padding:4px 8px; font-size:12px; }
+  .msg { text-align:center; font-size:14px; color:var(--tx2); margin:30px 0; line-height:1.5; }
+  .vale { margin-top:auto; padding-top:16px; text-align:center; font-size:12px; color:var(--tx3); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Regula UPA<sup>BETA</sup></h1>
+  <div class="sub" id="sub"></div>
+  <div id="acoes" hidden>
+    <label class="botao p" id="btnFoto"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1.8l1.2-1.8A2 2 0 0 1 10.2 3.3h3.6a2 2 0 0 1 1.7.9L16.7 6h1.8A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/><circle cx="12" cy="12.8" r="3.6"/></svg>Tirar foto<input type="file" id="camera" accept="image/*" capture="environment"></label>
+    <label class="botao s" id="btnGaleria"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.7" cy="9.3" r="1.7"/><path d="M21 15.5l-5-5-8.5 8.5"/></svg>Escolher da galeria<input type="file" id="galeria" accept="image/*" multiple></label>
+    <label class="botao s" id="btnPdf"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 16.5h4"/></svg>Enviar PDF<input type="file" id="pdf" accept="application/pdf,.pdf" multiple></label>
+    <ul id="lista"></ul>
+  </div>
+  <p class="msg" id="msg">Abrindo...</p>
+  <div class="vale" id="vale"></div>
+</main>
+<script>
+(function () {
+  'use strict';
+  // O Supabase do Regula UPA (o mesmo do conta_config.js da extensão; a chave pública é pública de verdade)
+  var FUNCAO = 'https://ttiinhmiuiuetbbqaogv.supabase.co/functions/v1/celular';
+  var CHAVE = 'sb_publishable_C6x6-39DReS2bdLSMsc-QQ_4e4Bcn-b';
+  // A foto já sai no tamanho final da folha do PDF da extensão (A4, ~170 pontos por polegada: no máximo 1874 px no lado
+  // maior e 1292 no menor), em JPEG 85% — lá ela entra como chegou, sem ser comprimida de novo
+  var LADO_MAX = 1874, LADO_MENOR_MAX = 1292, QUALIDADE = 0.85;
+  function escalaDaFolha(w, h) { return Math.min(1, LADO_MAX / Math.max(w, h), LADO_MENOR_MAX / Math.min(w, h)); }
+  var MAX_ARQUIVO = 15 * 1024 * 1024; // o mesmo limite do servidor (por arquivo)
+  var ICONE_PDF = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8z"/><path d="M14 3v5h5"/></svg>';
+
+  var $ = function (id) { return document.getElementById(id); };
+  // o código vem depois do "#"; guardado na aba (sessionStorage) porque o Android às vezes recarrega a página ao voltar
+  // da câmera
+  var codigo = (location.hash || '').replace(/^#/, '');
+  try { if (codigo) sessionStorage.setItem('regulaFoto', codigo); else codigo = sessionStorage.getItem('regulaFoto') || ''; } catch (e) {}
+  var partes = codigo.split('.');
+  var envio = partes[0] || '', token = partes.slice(1).join('.') || '';
+  var expiraEm = 0, relogio = null, n = 0, enviados = 0, maxArquivos = 15;
+
+  function mensagem(t) { $('msg').textContent = t; $('msg').hidden = !t; }
+  function vencido(t) {
+    $('acoes').hidden = true; clearInterval(relogio); $('vale').textContent = '';
+    mensagem(t || 'Este código venceu. Gere outro na extensão.');
+  }
+  function ehPdf(arquivo) { return arquivo.type === 'application/pdf' || /\.pdf$/i.test(arquivo.name || ''); }
+  function noLimite() {
+    var cheio = enviados >= maxArquivos;
+    ['btnFoto', 'btnGaleria', 'btnPdf'].forEach(function (b) { $(b).classList.toggle('desligado', cheio); });
+    if (cheio) $('vale').textContent = 'Limite de ' + maxArquivos + ' arquivos deste código. Gere outro na extensão, se precisar.';
+  }
+  function hora(ms) { var d = new Date(ms); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+
+  function pedir(corpo) {
+    return fetch(FUNCAO, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: CHAVE }, body: JSON.stringify(corpo) })
+      .then(function (r) { return r.json().then(function (j) { j.status = r.status; return j; }); });
+  }
+
+  // A foto reduzida, em JPEG (também a HEIC do iPhone e a foto deitada: o navegador já desenha na posição certa) ou em
+  // PNG (png = true: o print de tela continua nítido)
+  function reduzir(arquivo, png) {
+    var desenhar = function (fonte, w, h) {
+      var esc = escalaDaFolha(w, h);
+      var c = document.createElement('canvas'); c.width = Math.max(1, Math.floor(w * esc)); c.height = Math.max(1, Math.floor(h * esc));
+      c.getContext('2d').drawImage(fonte, 0, 0, c.width, c.height);
+      return new Promise(function (ok, falha) { c.toBlob(function (b) { b ? ok(b) : falha(new Error('foto ilegível')); }, png ? 'image/png' : 'image/jpeg', QUALIDADE); });
+    };
+    if (window.createImageBitmap) {
+      return createImageBitmap(arquivo, { imageOrientation: 'from-image' })
+        .then(function (bm) { return desenhar(bm, bm.width, bm.height); })
+        .catch(function () { return viaImagem(); });
+    }
+    return viaImagem();
+    function viaImagem() {
+      return new Promise(function (ok, falha) {
+        var url = URL.createObjectURL(arquivo), img = new Image();
+        img.onload = function () { URL.revokeObjectURL(url); ok(desenhar(img, img.naturalWidth, img.naturalHeight)); };
+        img.onerror = function () { URL.revokeObjectURL(url); falha(new Error('foto ilegível')); };
+        img.src = url;
+      });
+    }
+  }
+
+  // A largura e a altura da imagem (null se não abrir)
+  function medidas(arquivo) {
+    return new Promise(function (ok) {
+      var url = URL.createObjectURL(arquivo), img = new Image();
+      img.onload = function () { URL.revokeObjectURL(url); ok({ w: img.naturalWidth, h: img.naturalHeight }); };
+      img.onerror = function () { URL.revokeObjectURL(url); ok(null); };
+      img.src = url;
+    });
+  }
+
+  // O arquivo pronto para subir: a foto reduzida (JPEG; PNG continua PNG); o PDF como está (até 15 MB)
+  function preparar(arquivo) {
+    if (ehPdf(arquivo)) {
+      if (arquivo.size > MAX_ARQUIVO) return Promise.reject(new Error('PDF grande demais (máx. 15 MB)'));
+      return Promise.resolve({ corpo: arquivo, tipo: 'application/pdf' });
+    }
+    if (arquivo.type === 'image/png') {
+      // PNG: vai como está se já for pequena; senão, reduzida em PNG; grande demais ainda assim, em JPEG
+      return medidas(arquivo).then(function (m) {
+        if (m && escalaDaFolha(m.w, m.h) === 1 && arquivo.size <= MAX_ARQUIVO) return { corpo: arquivo, tipo: 'image/png' };
+        return reduzir(arquivo, true).then(function (png) {
+          if (png.size <= MAX_ARQUIVO) return { corpo: png, tipo: 'image/png' };
+          return reduzir(arquivo, false).then(function (jpeg) { return { corpo: jpeg, tipo: 'image/jpeg' }; });
+        });
+      });
+    }
+    return reduzir(arquivo, false).then(function (jpeg) {
+      if (jpeg.size > MAX_ARQUIVO) throw new Error('foto grande demais');
+      return { corpo: jpeg, tipo: 'image/jpeg' };
+    });
+  }
+
+  // A chave de cada arquivo (o mesmo arquivo no aviso e no envio)
+  function novaChave() {
+    var b = new Uint8Array(10), s = '';
+    (window.crypto || window.msCrypto).getRandomValues(b);
+    for (var i = 0; i < b.length; i++) s += (b[i] % 36).toString(36);
+    return s;
+  }
+  function semExtensao(nome) { return String(nome || '').replace(/\.[a-z0-9]{1,5}$/i, '').trim(); }
+  // O aviso (os nomes) vai antes de qualquer arquivo: o primeiro só sobe depois dele (no máximo 4 s de espera — enquanto
+  // isso, a foto já vai sendo reduzida)
+  function anunciar(itens) {
+    var aviso = pedir({ acao: 'anunciar', id: envio, token: token, arquivos: itens.map(function (i) { return { chave: i.chave, nome: i.nome, tipo: i.pdf ? 'pdf' : 'foto' }; }) })
+      .catch(function () { /* sem o aviso, o arquivo chega do mesmo jeito */ });
+    return Promise.race([aviso, new Promise(function (ok) { setTimeout(ok, 4000); })]);
+  }
+
+  // Envia um arquivo já preparado (reduzido); falhou de vez: avisa o servidor (o esqueleto some da extensão)
+  function enviar(item, preparado) {
+    var st = item.li.querySelector('.st');
+    st.className = 'st'; st.textContent = 'enviando...';
+    var velho = item.li.querySelector('button'); if (velho) velho.remove();
+    return (preparado || preparar(item.arquivo)).then(function (pronto) {
+      if (!item.pdf) item.li.querySelector('img').src = URL.createObjectURL(pronto.corpo);
+      var url = FUNCAO + '?acao=enviar&id=' + encodeURIComponent(envio) + '&token=' + encodeURIComponent(token) + '&chave=' + item.chave;
+      return fetch(url, { method: 'POST', headers: { 'Content-Type': pronto.tipo, apikey: CHAVE }, body: pronto.corpo });
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (r.status === 410) { vencido(j.erro); throw new Error(j.erro); }
+        if (!r.ok) throw new Error(j.erro || 'falhou');
+        enviados += 1; noLimite();
+        st.className = 'st ok'; st.innerHTML = '<svg class="ok-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>' + (item.pdf ? 'enviado' : 'enviada');
+      });
+    }).catch(function (e) {
+      st.className = 'st erro'; st.textContent = (e && e.message) || 'falhou';
+      pedir({ acao: 'falhou', id: envio, token: token, chave: item.chave }).catch(function () {});
+      if (/grande demais|limite|máximo|só foto|venc/i.test(st.textContent)) return; // de novo não adianta
+      var b = document.createElement('button'); b.textContent = 'De novo';
+      b.onclick = function () { var aviso = anunciar([item]); fila = fila.then(function () { return aviso.then(function () { return enviar(item); }); }); };
+      item.li.appendChild(b);
+    });
+  }
+
+  // Os arquivos escolhidos: aparecem na lista, o servidor é avisado na hora (com os nomes) e eles sobem um de cada vez
+  var fila = Promise.resolve();
+  function escolhidos(input, origem) {
+    var arquivos = Array.prototype.slice.call(input.files || []);
+    input.value = '';
+    if (!arquivos.length) return;
+    var itens = arquivos.map(function (arquivo) {
+      n += 1;
+      var pdf = ehPdf(arquivo);
+      var nome = pdf ? (arquivo.name || 'PDF ' + n) : (origem === 'galeria' && semExtensao(arquivo.name)) || 'Foto ' + n;
+      var li = document.createElement('li');
+      li.innerHTML = (pdf ? '<span class="doc">' + ICONE_PDF + '</span>' : '<img alt="">') + '<span class="nome"></span><span class="st">na fila</span>';
+      li.querySelector('.nome').textContent = nome;
+      $('lista').insertBefore(li, $('lista').firstChild);
+      return { arquivo: arquivo, pdf: pdf, nome: nome, chave: novaChave(), li: li };
+    });
+    var aviso = anunciar(itens);
+    // um de cada vez; o próximo já vai sendo reduzido enquanto o anterior sobe
+    var preparos = [];
+    var preparo = function (k) {
+      if (!preparos[k]) { preparos[k] = preparar(itens[k].arquivo); preparos[k].catch(function () {}); }
+      return preparos[k];
+    };
+    itens.forEach(function (item, k) {
+      fila = fila.then(function () {
+        var p = preparo(k);
+        if (k + 1 < itens.length) preparo(k + 1);
+        return aviso.then(function () { return enviar(item, p); });
+      });
+    });
+  }
+  $('camera').addEventListener('change', function () { escolhidos(this, 'camera'); });
+  $('galeria').addEventListener('change', function () { escolhidos(this, 'galeria'); });
+  $('pdf').addEventListener('change', function () { escolhidos(this, 'pdf'); });
+
+  // um QR novo lido com esta página aberta (só o "#" muda e o navegador não recarrega): recomeça com o código novo
+  window.addEventListener('hashchange', function () { if (location.hash.length > 1) location.reload(); });
+  if (!/^[0-9a-f-]{36}$/i.test(envio) || token.length < 20) { vencido('Abra pelo QR code da extensão.'); return; }
+  history.replaceState(null, '', location.pathname); // o token sai da barra de endereço (e do histórico)
+
+  pedir({ acao: 'info', id: envio, token: token }).then(function (r) {
+    if (!r.ok) { vencido(r.erro); return; }
+    expiraEm = new Date(r.expiraEm).getTime();
+    enviados = r.fotos || 0; maxArquivos = r.maxFotos || maxArquivos;
+    $('sub').textContent = 'Fotos para a regulação' + (r.iniciais ? ' · ' + r.iniciais : '');
+    $('acoes').hidden = false; mensagem('');
+    $('vale').textContent = 'Este código vale até ' + hora(expiraEm);
+    noLimite();
+    relogio = setInterval(function () { if (Date.now() > expiraEm) vencido(); }, 5000);
+  }).catch(function () { mensagem('Sem conexão. Confira a internet e leia o QR de novo.'); });
+})();
+</script>
+</body>
+</html>
