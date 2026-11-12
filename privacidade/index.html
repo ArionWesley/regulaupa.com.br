@@ -47,14 +47,14 @@
       marcadores), a idade e o sexo, no lugar das evoluções. O resultado volta para a extensão. Nosso servidor não guarda esse
       conteúdo.</li>
     <li><b>Texto colado (modo manual)</b>: quando a leitura automática do e-Saúde falha, o profissional pode colar o texto do
-      atendimento na extensão e informar o nome, a data de nascimento e o sexo do paciente. Antes de enviar o texto para a
-      análise por IA, a extensão troca por marcadores, automaticamente e no próprio computador, o nome do paciente (e o da
-      mãe, quando conhecido), o que tem o formato de CPF, de cartão SUS, de telefone e de e-mail, e os dados que vêm depois
-      de rótulos como "Nome:", "Mãe:" e "Endereço:". A extensão não tem como reconhecer toda identificação num texto
-      livre: o que ela não reconhecer é enviado como está. O nome e a data de
-      nascimento informados não são enviados à IA (só a idade e o sexo): servem para preencher o CRUE. O texto colado fica
-      na memória do Chrome enquanto a regulação está aberta e é apagado quando o CRUE é preenchido. Nosso servidor não
-      guarda esse conteúdo.</li>
+      atendimento na extensão, para a regulação ou para a ficha de notificação. A extensão pede só o texto, sem os dados
+      do paciente. Antes de enviar o texto para a análise por IA, a extensão troca por marcadores, automaticamente e no
+      próprio computador, o nome do paciente e o da mãe, quando ela já os conhece (lidos do e-Saúde), o que tem o formato
+      de CPF, de cartão SUS, de telefone e de e-mail, e os dados que vêm depois de rótulos como "Nome:", "Mãe:" e
+      "Endereço:". A extensão não tem como reconhecer toda identificação num texto livre: o que ela não reconhecer é
+      enviado como está, e cabe ao profissional não colar dados que identifiquem o paciente. O texto colado fica na
+      memória do Chrome: na regulação, até o CRUE ser preenchido; na ficha, até o Chrome fechar (no máximo 12 horas).
+      Nosso servidor não guarda esse conteúdo.</li>
     <li>Os anexos (documentos e exames) são juntados num PDF dentro do próprio navegador e vão direto para o formulário do CRUE.
       Eles não são enviados à IA nem guardados no nosso servidor. Enquanto a regulação está aberta, ficam no armazenamento da
       própria extensão no Chrome (para o profissional poder fechar e reabrir a extensão sem perdê-los) e são apagados quando o
