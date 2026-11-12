@@ -17,7 +17,7 @@
 <body>
 <main>
   <h1>Regula UPA — Política de privacidade</h1>
-  <div class="data">Atualizada em 11/11/2026</div>
+  <div class="data">Atualizada em 12/11/2026</div>
 
   <div class="cartao">O Regula UPA é uma extensão do Google Chrome para profissionais de saúde das UPAs de Porto Velho (RO). Ela lê o
   atendimento aberto no e-Saúde (ou o texto que o profissional cola, quando essa leitura falha), sugere o preenchimento do pedido de regulação no CRUE (REGULA-RO) com apoio de inteligência
@@ -25,8 +25,8 @@
 
   <h2>1. Dados do profissional (a conta)</h2>
   <ul>
-    <li>Guardamos o cadastro: nome, CPF (usado como login), número e UF do CRM, telefone e e-mail. Servem para preencher os dados do
-      solicitante no CRUE e para entrar na extensão.</li>
+    <li>Guardamos o cadastro: nome, CPF (usado como login), profissão, número e UF do conselho (CRM ou COREN), telefone e e-mail.
+      Servem para preencher os dados do profissional no CRUE e nas fichas de notificação, e para entrar na extensão.</li>
     <li>A senha é guardada de forma cifrada pelo provedor de autenticação (Supabase); nós não temos acesso a ela.</li>
     <li><b>Esqueci a senha</b>: para confirmar que é você, a extensão mostra o QR code de uma cobrança Pix de R$ 5,00, gerada na
       Efí (instituição de pagamento) com o seu CPF e o seu nome como devedor. Só uma conta bancária no seu CPF consegue pagá-la;
@@ -48,10 +48,10 @@
       conteúdo.</li>
     <li><b>Texto colado (modo manual)</b>: quando a leitura automática do e-Saúde falha, o profissional pode colar o texto do
       atendimento na extensão e informar o nome, a data de nascimento e o sexo do paciente. Antes de enviar o texto para a
-      análise por IA, a extensão troca por marcadores, no próprio computador, o nome informado, o que tem o formato de CPF,
-      de cartão SUS, de telefone e de e-mail, e os dados que vêm depois de rótulos como "Nome:", "Mãe:" e "Endereço:", e
-      mostra o texto como vai ser enviado, para o profissional conferir. A extensão não tem como reconhecer toda
-      identificação num texto livre: o que o profissional mantiver no texto é enviado como está. O nome e a data de
+      análise por IA, a extensão troca por marcadores, automaticamente e no próprio computador, o nome do paciente (e o da
+      mãe, quando conhecido), o que tem o formato de CPF, de cartão SUS, de telefone e de e-mail, e os dados que vêm depois
+      de rótulos como "Nome:", "Mãe:" e "Endereço:". A extensão não tem como reconhecer toda identificação num texto
+      livre: o que ela não reconhecer é enviado como está. O nome e a data de
       nascimento informados não são enviados à IA (só a idade e o sexo): servem para preencher o CRUE. O texto colado fica
       na memória do Chrome enquanto a regulação está aberta e é apagado quando o CRUE é preenchido. Nosso servidor não
       guarda esse conteúdo.</li>
@@ -83,7 +83,7 @@
     <li><b>Digitalizar</b>: o recorte e a melhora da imagem de um documento são feitos no próprio computador; nada é enviado
       a servidor.</li>
     <li><b>Rascunhos</b>: o que o profissional digita nas janelas do e-Saúde pode ser guardado como rascunho na memória do próprio
-      Chrome por até 6 horas, para não se perder. Não sai do computador e some quando o Chrome é fechado.</li>
+      Chrome por até 3 horas, para não se perder. Não sai do computador e some quando o Chrome é fechado.</li>
     <li><b>Diagnóstico de funcionamento</b>: quando a extensão percebe que o e-Saúde mudou (o desenho da tela ou o formato das
       respostas do servidor dele), ela monta um relatório técnico para o desenvolvedor consertar: os códigos do que falhou, as
       versões, as rotas que a tela pediu, o desenho da tela com cada dado trocado pelo tipo dele (por exemplo, "[texto
